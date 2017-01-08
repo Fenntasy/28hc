@@ -283,7 +283,7 @@ view model =
                             ]
                         , div []
                             [ div [] [ text "normal time: " ]
-                            , text (Date.Extra.Format.format Date.Extra.Config.Config_en_us.config "%A %d/%m/%Y %H:%I" date)
+                            , text (Date.Extra.Format.format Date.Extra.Config.Config_en_us.config "%A %d/%m/%Y %H:%M" date)
                             ]
                         ]
                     ]
