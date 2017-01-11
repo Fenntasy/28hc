@@ -3,8 +3,9 @@ module Main exposing (..)
 -- Read more about this program in the official Elm guide:
 -- https://guide.elm-lang.org/architecture/effects/time.html
 
-import Html exposing (Html, div, text)
-import Html.Attributes exposing (style)
+import Html exposing (Html, div, text, input, label)
+import Html.Attributes exposing (style, type_, name, checked)
+import Html.Events exposing (onClick)
 import Svg exposing (svg, circle, line)
 import Svg.Attributes
     exposing
@@ -29,6 +30,7 @@ import Date.Extra.Format
 import Date.Extra.Config.Config_en_us
 
 
+main : Program Never Model Msg
 main =
     Html.program
         { init = init
@@ -43,9 +45,9 @@ main =
 
 
 type alias Model =
-    { time :
-        Maybe Time
+    { time : Maybe Time
     , weekStart : Time
+    , startOfWeek : Date.Day
     }
 
 
@@ -53,6 +55,7 @@ init : ( Model, Cmd Msg )
 init =
     ( { time = Nothing
       , weekStart = 0
+      , startOfWeek = Date.Mon
       }
     , Cmd.none
     )
@@ -64,6 +67,7 @@ init =
 
 type Msg
     = Tick Time
+    | ChangeStartOfWeek Date.Day
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -72,7 +76,7 @@ update msg model =
         Tick newTime ->
             let
                 weekStart =
-                    Date.Extra.Field.fieldToDateClamp (Date.Extra.Field.DayOfWeek ( Date.Mon, Date.Mon )) (Date.fromTime newTime)
+                    Date.Extra.Field.fieldToDateClamp (Date.Extra.Field.DayOfWeek ( model.startOfWeek, model.startOfWeek )) (Date.fromTime newTime)
 
                 weekTime =
                     dateFromFields (Date.year weekStart) (Date.month weekStart) (Date.day weekStart) 0 0 0 0
@@ -83,6 +87,9 @@ update msg model =
                   }
                 , Cmd.none
                 )
+
+        ChangeStartOfWeek day ->
+            ( { model | startOfWeek = day }, Cmd.none )
 
 
 
@@ -280,6 +287,78 @@ view model =
                                     ++ ":"
                                     ++ (padded date28h.minutes)
                                 )
+                            , div []
+                                [ label []
+                                    [ input
+                                        [ name "start-of-week"
+                                        , type_ "radio"
+                                        , onClick (ChangeStartOfWeek Date.Mon)
+                                        , checked (model.startOfWeek == Date.Mon)
+                                        ]
+                                        []
+                                    , text <| toString Date.Mon
+                                    ]
+                                , label []
+                                    [ input
+                                        [ name "start-of-week"
+                                        , type_ "radio"
+                                        , onClick (ChangeStartOfWeek Date.Tue)
+                                        , checked (model.startOfWeek == Date.Tue)
+                                        ]
+                                        []
+                                    , text <| toString Date.Tue
+                                    ]
+                                , label []
+                                    [ input
+                                        [ name "start-of-week"
+                                        , type_ "radio"
+                                        , onClick (ChangeStartOfWeek Date.Wed)
+                                        , checked (model.startOfWeek == Date.Wed)
+                                        ]
+                                        []
+                                    , text <| toString Date.Wed
+                                    ]
+                                , label []
+                                    [ input
+                                        [ name "start-of-week"
+                                        , type_ "radio"
+                                        , onClick (ChangeStartOfWeek Date.Thu)
+                                        , checked (model.startOfWeek == Date.Thu)
+                                        ]
+                                        []
+                                    , text <| toString Date.Thu
+                                    ]
+                                , label []
+                                    [ input
+                                        [ name "start-of-week"
+                                        , type_ "radio"
+                                        , onClick (ChangeStartOfWeek Date.Fri)
+                                        , checked (model.startOfWeek == Date.Fri)
+                                        ]
+                                        []
+                                    , text <| toString Date.Fri
+                                    ]
+                                , label []
+                                    [ input
+                                        [ name "start-of-week"
+                                        , type_ "radio"
+                                        , onClick (ChangeStartOfWeek Date.Sat)
+                                        , checked (model.startOfWeek == Date.Sat)
+                                        ]
+                                        []
+                                    , text <| toString Date.Sat
+                                    ]
+                                , label []
+                                    [ input
+                                        [ name "start-of-week"
+                                        , type_ "radio"
+                                        , onClick (ChangeStartOfWeek Date.Sun)
+                                        , checked (model.startOfWeek == Date.Sun)
+                                        ]
+                                        []
+                                    , text <| toString Date.Sun
+                                    ]
+                                ]
                             ]
                         , div []
                             [ div [] [ text "normal time: " ]
